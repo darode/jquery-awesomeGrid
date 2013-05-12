@@ -12,7 +12,8 @@
       		"cellHeight": 0,
       		"animate": true,
       		"duration": 400,
-      		"easing": "swing"
+      		"easing": "swing",
+      		"callbacks": null
 		};
 
 	var lastPos = {"r":0, "c":0};
@@ -86,6 +87,7 @@
 
 			//Initialize variable because all cells are at init status
 			lastPos = {"r":0, "c":0};
+			executeCellCallback("restore", pos);
 		} else {
 			
 			//Resize elements with or without animation
@@ -96,10 +98,11 @@
 			}
 
 			lastPos = pos;
-		}		
+			executeCellCallback("resize", pos);
+		}
 	}
 
-	//This function resized grid elementes
+	//Resizes grid elements
 	function resizeElements(obj) {
 		
 		var pos = getCellPosition(obj);
@@ -119,7 +122,7 @@
 		$("#ag_"+pos.r+"_"+pos.c).css("height", settings.maxCellHeight);
 	}
 
-	//Reized the cells with an animation
+	//Reizes the cells with an animation
 	function resizeElementsAnimated (obj) {
 		var pos = getCellPosition(obj);
 
@@ -149,12 +152,13 @@
 		
 	}
 
-	//Restore all elements to the original size
+	//Restores all elements to the original size
 	function restoreElements (obj) {
 		$("[id^='ag_']").css("width", settings.cellWidth);
 		$("[id^='ag_']").css("height", settings.cellHeight);
 	}
 
+	//Restores elements using animeted function
 	function restoreElementsAnimated (obj) {
 		$("[id^='ag_']").animate({"width": settings.cellWidth, "height": settings.cellHeight}, settings.duration, settings.easing);
 	}
@@ -166,4 +170,15 @@
 
 		return {"r": idArray[1], "c": idArray[2]};
 	}
+
+	//Execute cell function callback
+	function executeCellCallback (type,pos) {
+		var fn = settings[type+"_callback_"+pos.r+"_"+pos.c];
+
+		if (fn) {
+			fn.apply();
+		}
+   	}
+
+
 })( jQuery );
