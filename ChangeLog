@@ -1,0 +1,5 @@
+2013-05-15 Dario Rodriguez <drd.sqki@gmail.com>
+
+	* jquery-awesomeGrid: Updated library to support grids with
+	rows with different sizes, callback on resize and restore cells
+	and also disabled cliking callback on cells.	

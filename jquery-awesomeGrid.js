@@ -2,26 +2,27 @@
 
 	//Default settings
 	var settings = {
-			"rows": 3,
-      		"cols": 3,
-      		"minCellWidth": "30px",
-      		"minCellHeight": "30px",
-      		"maxCellWidth": "510px",
-      		"maxCellHeight": "510px",
-      		"cellWidth": 0,
-      		"cellHeight": 0,
+			"gridDef": null,
       		"animate": true,
       		"duration": 400,
       		"easing": "swing",
-      		"callbacks": null
+      		"resize_callback": null,
+      		"restore_callback": null
 		};
 
 	var lastPos = {"r":0, "c":0};
 
+	var gridProperties = new Array(); //Cotains arrays of objects with cells properties
+
+	var gridDefinition = null;
+
 	$.fn.awesomeGrid = function(options) {
-  	
+
 	  	//Default options
     	settings = $.extend(settings,options);
+
+    	//Assign gridDefinition to a global variable (just to simplify de code)
+    	gridDefinition = settings.gridDef;
 	   
 	   	//Get grid width and height
 	   	var width = this.css("width");
@@ -38,31 +39,37 @@
 
 	   	var r = 1;
 	   	var c = 1;
-	   	var getCellSize = true;
 
 	   	//Create first row for status array
-	   	cells.each(function (){	
 
-	   		//Get cell size and safe into settings
-	   		if (getCellSize) {
-	   			settings.cellWidth = $(this).css("width");
-	   			settings.cellHeight = $(this).css("height");
-	   			getCellSize = false;
-	   		}
+	   	gridProperties[r] = new Array();
+
+	   	cells.each(function (){
 
 	   		//Check if the columns are finished
-			if (c > settings.cols) {
+			if (c > gridDefinition[r].cells) {
 				c = 1;
 				r++;
+				gridProperties[r] = new Array();
 			}
+
+			//Get cell size and safe into gridProperties
+	   		var width = $(this).css("width");
+			var height = $(this).css("height");
+
+	   		gridProperties[r][c] = {"width": width, "height": height};			
 
 			//Set ID
 	   		$(this).attr("id", "ag_"+r+"_"+c);
 
-	   		//Set callback
-	   		$(this).click(function (){
-	   			toggleCell($(this));
-	   		});
+	   		//Set callback only if cell enabled
+	   		if (jQuery.inArray(c, gridDefinition[r].disabled_cells) < 0) {
+
+	   			//The cell IS NOT in disabled array so we hook the callback
+	   			$(this).click(function (){
+	   				toggleCell($(this));
+	   			});
+	   		}
 
 	   		c++;
 	   	});
@@ -76,10 +83,13 @@
 
 		//Always restore grid to init status
 		//With or withour animation
+		//Always execute resotre callback if any
+		executeCellCallback("restore", pos);
 		if (settings.animate) {
-			restoreElementsAnimated(obj);
+
+			restoreElementsAnimated();
 		} else {
-			restoreElements(obj);
+			restoreElements();
 		}
 
 		//Enlarge or restore depending on cell status
@@ -87,7 +97,6 @@
 
 			//Initialize variable because all cells are at init status
 			lastPos = {"r":0, "c":0};
-			executeCellCallback("restore", pos);
 		} else {
 			
 			//Resize elements with or without animation
@@ -131,37 +140,63 @@
 		*/
 
 		//First set new size for cells in the same row
-		for (i=1; i<=settings.cols; i++) {
+	   	var cols = gridDefinition[pos.r].cells;
+
+	   	for (i=1; i<=cols; i++) {
+	   		
+	   		var width = gridDefinition[pos.r].minCellWidth;
+	   		var height = gridDefinition[pos.r].maxCellHeight;
 
 			if (i != pos.c) {
-				$("div[id^='ag_"+pos.r+"_"+i+"']").animate({"width": settings.minCellWidth, "height": settings.maxCellHeight}, settings.duration, settings.easing);
+				$("div[id^='ag_"+pos.r+"_"+i+"']").animate({"width": width, "height": height}, settings.duration, settings.easing);
 			}
 		}
+
 
 		//Set new size of clicked cell
-		$("#ag_"+pos.r+"_"+pos.c).animate({"width": settings.maxCellWidth, "height": settings.maxCellHeight}, settings.duration, settings.easing);	
+		var maxCellWidth = gridDefinition[pos.r].maxCellWidth;
+		var maxCellHeight = gridDefinition[pos.r].maxCellHeight;
+
+		$("#ag_"+pos.r+"_"+pos.c).animate({"width": maxCellWidth, "height": maxCellHeight}, settings.duration, settings.easing);	
 		
-		//Walk through the other rows and cells
-		for (i=1; i<=settings.rows; i++) {
+		//Iterate through the other rows and cells
+		var rows = gridDefinition.length;
+
+		for (i=1; i<rows; i++) {
+			
+			var height = gridDefinition[i].minCellHeight;
 
 			if (i != pos.r) {
-				$("div[id^='ag_"+i+"']").animate({"height": settings.minCellHeight}, settings.duration, settings.easing);
+				$("div[id^='ag_"+i+"']").animate({"height": height}, settings.duration, settings.easing);
 			}
 		}
-
-		
 	}
 
 	//Restores all elements to the original size
-	function restoreElements (obj) {
-		$("[id^='ag_']").css("width", settings.cellWidth);
-		$("[id^='ag_']").css("height", settings.cellHeight);
+	function restoreElements () {
+		$("div[id^='ag_']").css("width", settings.cellWidth);
+		$("div[id^='ag_']").css("height", settings.cellHeight);
 	}
 
 	//Restores elements using animeted function
-	function restoreElementsAnimated (obj) {
-		$("[id^='ag_']").animate({"width": settings.cellWidth, "height": settings.cellHeight}, settings.duration, settings.easing);
+	function restoreElementsAnimated () {
+
+	   	var rows = gridDefinition.length;
+
+	   	for (i=1; i<rows; i++) {
+
+	   		var cols = gridDefinition[i].cells;
+	
+			for (j=1; j<=cols; j++) {
+	   	
+				var cellProperties = gridProperties[i][j];
+
+	   			$("#ag_"+i+"_"+j).animate({"width": cellProperties.width, "height": cellProperties.height}, settings.duration, settings.easing);
+
+	   		}
+	   	}
 	}
+
 	//Returns grid position as an object
 	function getCellPosition(obj) {
 		var idString = obj.attr("id");
@@ -173,10 +208,17 @@
 
 	//Execute cell function callback
 	function executeCellCallback (type,pos) {
-		var fn = settings[type+"_callback_"+pos.r+"_"+pos.c];
 
-		if (fn) {
-			fn.apply();
+		var args = [pos];
+
+		if (type == "resize") {
+			if (settings.resize_callback) {
+				settings.resize_callback.apply(null, args);
+			}
+		} else {
+			if (settings.restore_callback) {
+				settings.restore_callback.apply(null, args);
+			}
 		}
    	}
 
