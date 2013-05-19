@@ -1,3 +1,8 @@
+2013-05-19 Dario Rodriguez <drd.sqki@gmail.com>
+
+	* doc/documentation.txt: Created documentation file.
+	* README: updated readme file. 
+
 2013-05-15 Dario Rodriguez <drd.sqki@gmail.com>
 
 	* jquery-awesomeGrid: Updated library to support grids with

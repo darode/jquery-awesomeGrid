@@ -1,3 +1,6 @@
 jqueyr-awesomeGrid
 
-JQuery plugin to create a grid UI based on divs
+JQuery plugin to create a grid UI based on divs.
+
+You can find all documentation in "doc" folder, and an example inside "example" folder.
+
