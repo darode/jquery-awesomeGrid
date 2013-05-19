@@ -1,0 +1,84 @@
+jquery-awesomeGrid documentation:
+
+With this library you can create amazing UI based on grids like new Windowis 8 
+interfaces.
+
+This plugin uses several divs to create the grid and another one to wrap it. It
+has a basic interaction when the user clicks on a cell. This interaction enlarges
+the clicked cell and minimize the others. Also is possible to hook functions to
+perform actions when enlargin and restoring cells.
+
+The plugin requires JQuery 1.8+.
+
+The main parameters of the plugin are:
+
+	* gridDef: Array with grid definition. The structure of this array is
+		explained below.
+		
+	* animate: Boolean true or false to enable or disable cell animation 
+		on enlarge/restore.
+
+	* duration: Integer to set the animation's duration, this parameter is 
+		passed to JQuery function "animate".
+
+	* easing: String to set easing mode for animation. By default it supports
+		"swing" and "linear" values. This variable is passed to JQuery function
+		"animate".
+
+	* resize_callback: Function that will be executed when a cell is enlarged.
+		A cell is enlarged when the user clicks on the div that represent the
+		cell. The function receives a plain object with cell position as a 
+		parameter,(pos.r = row, pos.c = column).
+
+	* restore_callback: Function that will be executed when the grid is restored.
+		The grid will be restored when:
+			a.- An enlarged cell is clicked the second time.
+			b.- The user clicks on a minimize cell.
+		The functions receives a plain object with cell position as a parameter,
+		(pos.r = row, pos.c = column).
+
+** GRID DEFINITION **
+
+The parameter "gridDef" expected an array with the grid's definition as follows:
+
+	gridDef = new Array();
+
+	gridDef[1] = {"cells": 3, 
+		"minCellWidth": "39px",
+		"minCellHeight": "39px",
+		"maxCellWidth": "791px",
+		"maxCellHeight": "457px",
+		"disabled_cells": [1]
+	};
+
+	gridDef[2] = {"cells": 2, 
+		"minCellWidth": "39px",
+		"minCellHeight": "39px",
+		"maxCellWidth": "871px",
+		"maxCellHeight": "424px"
+	};
+
+Each element of the array defines the structure of each grid row. The parameters
+of each row are:
+
+	* cells: Integer with the number of cells for this row.
+
+	* minCellWidth: String with min width for cells in pixels. The width 
+		the cell takes when another cell is enlarged.
+
+	* minCellHeight: String with min height for cells in pixels. The height 
+		the cell takes when another cell is enlarged.
+
+	* maxCellWidth: String with max width for cells in pixels. The width a 
+		cell takes when it is enlarged.
+
+	* maxCellHeight: String with max height for cells in pixels. The height a 
+		cell takes when it is enlarged.
+
+	* disabled_cells: Array of integers with the position of the cells that
+		will have the click action disabled. These cells will do nothing when
+		the user clicks on them.
+
+There is no limit to the number of rows and columns the plugin support, but is very 
+important to notice that you must have the same number of divs created in you code
+as you defined in the grid definition.
