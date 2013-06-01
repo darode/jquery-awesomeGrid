@@ -1,0 +1,109 @@
+/*STYLE RESET FOR MAYOR BROWSERS*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*END STYLE RESET*/
+body {
+	background-color: #fff;
+	font-family: verdana;
+}
+
+div.wrapper {
+	margin: 0 auto;
+	width: 900px;
+	min-width: 900px;
+	height: 440px;
+	min-height: 440px;
+	background-color: #00466E;
+	margin-top: 50px;
+}
+
+div.box_2col {
+	float: left;
+	background-color: pink;
+	width: 440px;
+	height: 200px;
+	margin: 10px;
+}
+
+div.box {
+	float: left;
+	background-color: orange;
+	width: 200px;
+	height: 200px;
+	margin: 10px;
+}
+
+div.purple {
+	background-color: #A100A8;
+}
+
+div.blue {
+	background-color: #1BA1E2;
+}
+
+div.green {
+	background-color: #00A000;
+}
+
+p.content {
+	color: #fff;
+	padding: 30px;
+}
+
+div.content_code {
+	float: left;
+	width: 100%;
+	margin-top: 50px;
+}
+
+h1 {
+	font-size: 16pt;
+}
+
+textarea.code_snippet {
+	margin-top: 10px;
+	width: 600px;
+	height: 300px;
+}
